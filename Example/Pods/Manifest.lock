@@ -1,0 +1,23 @@
+PODS:
+  - APNPermissionRequest (0.1.0):
+    - SDCAlertView (~> 2.2)
+  - RBBAnimation (0.3.0)
+  - SDCAlertView (2.2):
+    - RBBAnimation (~> 0.3)
+    - SDCAutoLayout (~> 2.0)
+  - SDCAutoLayout (2.0.2)
+
+DEPENDENCIES:
+  - APNPermissionRequest (from `../`)
+
+EXTERNAL SOURCES:
+  APNPermissionRequest:
+    :path: ../
+
+SPEC CHECKSUMS:
+  APNPermissionRequest: 8f6a626e29e74878e99a1dca80ac29df9fc2c31f
+  RBBAnimation: 243d73be1a526f1b51d266b182e4aa0cfe9cbf64
+  SDCAlertView: 8a06ba35a11aeb07915ce186f29b3d42b4a10176
+  SDCAutoLayout: 4a963629725ed2b7d665e789ca4d6cfcd7446822
+
+COCOAPODS: 0.35.0

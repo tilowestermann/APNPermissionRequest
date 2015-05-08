@@ -1,0 +1,1 @@
+../../../SDCAlertView/SDCAlertView/Source/SDCAlertCollectionViewCell.h
