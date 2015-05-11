@@ -3,4 +3,4 @@ xcode_workspace: Example/APNPermissionRequest.xcworkspace
 xcode_scheme: APNPermissionRequest-Example
 podfile: Example/Podfile
 script:
-  - xcodebuild [DEFAULT_OPTIONS] CODE_SIGNING_REQUIRED=NO
+  - xctool -workspace Example/APNPermissionRequest.xcworkspace -scheme 'APNPermissionRequest-Example' -sdk iphoneos build CODE_SIGNING_REQUIRED=NO
