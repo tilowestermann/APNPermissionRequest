@@ -2,3 +2,5 @@ language: objective-c
 xcode_workspace: Example/APNPermissionRequest.xcworkspace
 xcode_scheme: APNPermissionRequest-Example
 podfile: Example/Podfile
+script:
+  - xcodebuild [DEFAULT_OPTIONS] CODE_SIGNING_REQUIRED=NO
