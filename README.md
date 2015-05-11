@@ -1,9 +1,9 @@
 # APNPermissionRequest
 
-<!-- [![CI Status](http://img.shields.io/travis/tilowestermann/APNPermissionRequest.svg?style=flat)](https://travis-ci.org/tilowestermann/APNPermissionRequest)
+[![CI Status](http://img.shields.io/travis/tilowestermann/APNPermissionRequest.svg?style=flat)](https://travis-ci.org/tilowestermann/APNPermissionRequest)
 [![Version](https://img.shields.io/cocoapods/v/APNPermissionRequest.svg?style=flat)](http://cocoadocs.org/docsets/APNPermissionRequest)
 [![License](https://img.shields.io/cocoapods/l/APNPermissionRequest.svg?style=flat)](http://cocoadocs.org/docsets/APNPermissionRequest)
-[![Platform](https://img.shields.io/cocoapods/p/APNPermissionRequest.svg?style=flat)](http://cocoadocs.org/docsets/APNPermissionRequest) -->
+[![Platform](https://img.shields.io/cocoapods/p/APNPermissionRequest.svg?style=flat)](http://cocoadocs.org/docsets/APNPermissionRequest)
 
 APNPermissionRequest allows your users to make informed choices on whether to allow or disallow push notifications. The defauilt push notification permission request doesn't give a hint on the nature of notifications and users might deny the request just because they feel unsure. 
 With APNPermissionRequest you may add a) an additional explanatory string to the request and also b) notification settings, so that the user may decide which modality to receive, without navigating to the system Settings app.
@@ -16,7 +16,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ### Permission request with explanation
 
-![Permission request with explanation ](https://github.com/tilowestermann/APNPermissionRequest/tree/master/Screenshots/APNPermissionRequestExplanation.png)
+<img src="Screenshots/APNPermissionRequestExplanation.png" width="200" alt="Permission request with explanation">
 
 ```objective-c
 APNPermissionRequest *request = [APNPermissionRequest sharedRequest];
@@ -38,6 +38,8 @@ APNPermissionRequest *request = [APNPermissionRequest sharedRequest];
 ```
 
 ### Permission request with options
+
+<img src="Screenshots/APNPermissionRequestOptions.png" width="200" alt="Permission request with notification settings">
 
 ```objective-c
 APNPermissionRequest *request = [APNPermissionRequest sharedRequest];
