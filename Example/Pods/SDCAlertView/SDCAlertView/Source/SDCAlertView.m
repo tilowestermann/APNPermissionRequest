@@ -529,14 +529,19 @@ static CGFloat const SDCAlertViewLabelSpacing = 4;
 
 + (instancetype)alertViewWithAlertController:(SDCAlertController *)alertController {
 	SDCAlertAction *cancelAction = [self cancelActionForAlertController:alertController];
+	NSString *cancelActionTitle = cancelAction.title ?: cancelAction.attributedTitle.string;
 	SDCAlertView *alert = [[SDCAlertView alloc] initWithTitle:alertController.title
 													  message:alertController.message
 													 delegate:alertController
-											cancelButtonTitle:cancelAction.title
+											cancelButtonTitle:cancelActionTitle
 											otherButtonTitles:nil];
 	[alertController.actions enumerateObjectsUsingBlock:^(SDCAlertAction *action, NSUInteger idx, BOOL *stop) {
 		if (action != cancelAction) {
-			[alert addButtonWithTitle:action.title];
+			if (action.title) {
+				[alert addButtonWithTitle:action.title];
+			} else {
+				[alert addButtonWithTitle:action.attributedTitle.string];
+			}
 		}
 	}];
 	
@@ -563,6 +568,14 @@ static CGFloat const SDCAlertViewLabelSpacing = 4;
 	alert.alertContentView.customContentView = alertController.contentView;
 	
 	alert.alwaysShowsButtonsVertically = (alertController.actionLayout == SDCAlertControllerActionLayoutVertical);
+	
+	alert.shouldDismissHandler = ^BOOL(NSInteger buttonIndex) {
+		if (buttonIndex < alertController.actions.count && alertController.shouldDismissBlock) {
+			return alertController.shouldDismissBlock(alertController.actions[buttonIndex]);
+		}
+		
+		return YES;
+	};
 	
 	alert.didDismissHandler = ^(NSInteger buttonIndex) {
 		if (buttonIndex < alertController.actions.count) {

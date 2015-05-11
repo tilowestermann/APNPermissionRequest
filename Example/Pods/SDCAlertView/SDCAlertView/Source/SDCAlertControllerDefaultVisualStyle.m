@@ -44,6 +44,14 @@
 	return [UIFont systemFontOfSize:13];
 }
 
+- (UIColor *)titleLabelColor {
+	return [UIColor blackColor];
+}
+
+- (UIColor *)messageLabelColor {
+	return [UIColor blackColor];
+}
+
 - (CGFloat)labelSpacing {
 	return 18;
 }
@@ -78,7 +86,7 @@
 }
 
 - (UIColor *)textColorForAction:(SDCAlertAction *)action {
-	if (action.style == SDCAlertActionStyleDestructive) {
+	if (action.style & SDCAlertActionStyleDestructive) {
 		return [UIColor redColor];
 	} else {
 		return [[[UIView alloc] init] tintColor];
@@ -86,7 +94,7 @@
 }
 
 - (UIFont *)fontForAction:(SDCAlertAction *)action {
-	if (action.style == SDCAlertActionStyleCancel) {
+	if (action.style & SDCAlertActionStyleRecommended) {
 		return [UIFont boldSystemFontOfSize:17];
 	} else {
 		return [UIFont systemFontOfSize:17];

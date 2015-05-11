@@ -21,11 +21,11 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes/**/*'
-  s.resources = "Pod/Assets/APNPermissionRequestImages.xcassets"
+  #s.resources = "Pod/Assets/APNPermissionRequestImages.xcassets"
   s.resource_bundles = {
     'APNPermissionRequest' => ['Pod/Assets/**/*.png']
   }
 
   s.frameworks = 'UIKit'
-  s.dependency 'SDCAlertView', '~> 2.2'
+  s.dependency 'SDCAlertView', '~> 2.4.2'
 end
