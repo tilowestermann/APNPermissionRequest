@@ -247,9 +247,6 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Tilo Westermann";
 				TargetAttributes = {
-					6003F589195388D20070C39A = {
-						DevelopmentTeam = WD6N8ERT6Z;
-					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
