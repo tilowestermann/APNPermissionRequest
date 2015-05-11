@@ -27,5 +27,5 @@ Pod::Spec.new do |s|
   }
 
   s.frameworks = 'UIKit'
-  s.dependency 'SDCAlertView', '~> 2.4.2'
+  s.dependency 'SDCAlertView', '~> 2.4'
 end

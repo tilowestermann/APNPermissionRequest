@@ -161,7 +161,7 @@ typedef NS_ENUM(NSInteger, SDCAlertControllerActionLayout) {
  *		} else {
  *			// Keep using original alert
  *		}
- *		
+ *
  *		[alert presentWithCompletion:nil];
  */
 
