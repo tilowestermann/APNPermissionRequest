@@ -13,12 +13,13 @@
 #import <QuartzCore/QuartzCore.h>
 
 static NSString *const APNPermissionRequestShown = @"APNPermissionRequestShown";
-static NSString *const kAPNPermissionRequestBundle = @"APNPermissionRequest.bundle";
+static NSString *const kAPNPermissionRequestBundleName = @"APNPermissionRequest";
 static APNPermissionRequest *__sharedInstance;
 
 @interface APNPermissionRequest () <UITableViewDataSource, UITableViewDelegate> {
     SDCAlertController *alert;
     NSLayoutConstraint *heightConstraint;
+    NSBundle *resourceBundle;
 }
 
 @property (copy, nonatomic) APNPermissionRequestCompletionHandler completionHandler;
@@ -35,6 +36,7 @@ static APNPermissionRequest *__sharedInstance;
     dispatch_once(&onceToken, ^{
         __sharedInstance = [[APNPermissionRequest alloc] init];
         __sharedInstance.collapsed = YES;
+        [__sharedInstance setup];
     });
     return __sharedInstance;
 }
@@ -77,6 +79,11 @@ static APNPermissionRequest *__sharedInstance;
     }
 }
 
+- (void)setup {
+    resourceBundle = [NSBundle bundleWithPath:[[NSBundle bundleForClass:[APNPermissionRequest class]]
+                                               pathForResource:kAPNPermissionRequestBundleName
+                                               ofType:@"bundle"]];
+}
 
 - (void)showWithType:(APNType)requestedType
                title:(NSString *)requestTitle
@@ -300,9 +307,8 @@ static APNPermissionRequest *__sharedInstance;
         cell.textLabel.text = self.optionsTitle;
         cell.detailTextLabel.text = [[self requestedTypeNames] componentsJoinedByString:@", "];
         imgName = self.collapsed ? @"APNPermissionRequestArrowDown" : @"APNPermissionRequestArrowUp";
-        imgPath = [[NSBundle mainBundle] pathForResource:imgName
-                                                  ofType:@"png"
-                                             inDirectory:kAPNPermissionRequestBundle];
+        imgPath = [resourceBundle pathForResource:imgName
+                                           ofType:@"png"];
         cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:imgPath]];
         cell.textLabel.font = [UIFont boldSystemFontOfSize:13.0f];
     } else {
@@ -329,9 +335,8 @@ static APNPermissionRequest *__sharedInstance;
             permissionSwitch.on = (self.requestedType & APNTypeAlert);
             permissionSwitch.tag = APNTypeAlert;
         }
-        imgPath = [[NSBundle mainBundle] pathForResource:imgName
-                                                  ofType:@"png"
-                                             inDirectory:kAPNPermissionRequestBundle];
+        imgPath = [resourceBundle pathForResource:imgName
+                                           ofType:@"png"];
         cell.imageView.image = [UIImage imageWithContentsOfFile:imgPath];
         
         [permissionSwitch addTarget:self
@@ -374,9 +379,8 @@ static APNPermissionRequest *__sharedInstance;
     
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     NSString *imgName = self.collapsed ? @"APNPermissionRequestArrowDown" : @"APNPermissionRequestArrowUp";
-    NSString *imgPath = [[NSBundle mainBundle] pathForResource:imgName
-                                                        ofType:@"png"
-                                                   inDirectory:kAPNPermissionRequestBundle];
+    NSString *imgPath = [resourceBundle pathForResource:imgName
+                                                 ofType:@"png"];
     cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:imgPath]];
     
     heightConstraint.constant = [tableView numberOfRowsInSection:indexPath.section]*44;
