@@ -10,7 +10,7 @@
 #define COCOAPODS_POD_AVAILABLE_APNPermissionRequest
 #define COCOAPODS_VERSION_MAJOR_APNPermissionRequest 0
 #define COCOAPODS_VERSION_MINOR_APNPermissionRequest 1
-#define COCOAPODS_VERSION_PATCH_APNPermissionRequest 0
+#define COCOAPODS_VERSION_PATCH_APNPermissionRequest 1
 
 // RBBAnimation
 #define COCOAPODS_POD_AVAILABLE_RBBAnimation

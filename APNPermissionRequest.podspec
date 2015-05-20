@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "APNPermissionRequest"
-  s.version          = "0.1.1"
+  s.version          = "0.1.2"
   s.summary          = "APNPermissionRequest informs users about the purpose of your app's push notifications and enables users to choose their preferred type."
   s.description      = <<-DESC
                        Requests for enabling push notifications are quite meaningless. People are often wondering for what purpose your app wants to send push notifications. If the reason is not obvious, they will likely deny the request. This is bad.
@@ -22,9 +22,7 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Pod/Classes/**/*'
   #s.resources = "Pod/Assets/APNPermissionRequestImages.xcassets"
-  s.resource_bundles = {
-    'APNPermissionRequest' => ['Pod/Assets/**/*.png']
-  }
+  s.ios.resource_bundle = { 'APNPermissionRequest' => 'Pod/Assets/**/*.png' }
 
   s.frameworks = 'UIKit'
   s.dependency 'SDCAlertView', '~> 2.4'
