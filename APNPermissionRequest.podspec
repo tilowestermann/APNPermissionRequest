@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "APNPermissionRequest"
-  s.version          = "0.1.2"
+  s.version          = "0.1.3"
   s.summary          = "APNPermissionRequest informs users about the purpose of your app's push notifications and enables users to choose their preferred type."
   s.description      = <<-DESC
                        Requests for enabling push notifications are quite meaningless. People are often wondering for what purpose your app wants to send push notifications. If the reason is not obvious, they will likely deny the request. This is bad.
