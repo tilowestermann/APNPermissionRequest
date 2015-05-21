@@ -59,6 +59,36 @@ APNPermissionRequest *request = [APNPermissionRequest sharedRequest];
     }];
 ```
 
+### Fullscreen permission request
+
+<img src="Screenshots/APNPermissionRequestFullscreen.png" width="200" alt="Fullscreen permission request">
+
+```objective-c
+APNPermissionRequest *request = [APNPermissionRequest sharedRequest];
+request.backgroundColor = [UIColor colorWithRed:236.0/255.0 green:240.0/255.0 blue:241.0/255.0 alpha:1];
+
+NSMutableAttributedString *message = [[NSMutableAttributedString alloc] initWithString:@"Your delivery is ready for pick-up at the post office? We'll inform you immediately via a push notification!"];
+[message addAttribute:NSFontAttributeName
+                value:[UIFont italicSystemFontOfSize:14]
+                range:[message rangeOfString:@"push notification"]];
+[request showFullscreenWithType: APNTypeAlert | APNTypeSound
+                          title:@"\"MyMailman\" Would Like to Send You Notifications."
+                        message:message
+                   optionsTitle:@"Notification settings"
+                denyButtonTitle:@"Don't allow"
+               grantButtonTitle:@"OK"
+              completionHandler:^(BOOL hasPermission,
+                        APNPermissionRequestDialogResult userDialogResult,
+                        APNPermissionRequestDialogResult systemDialogResult) {
+                                NSLog(@"Permission: %d",hasPermission);
+        
+                                NSArray *actions = @[@"no action",@"denied", @"granted"];
+                                NSLog(@"user action: %@",actions[userDialogResult]);
+                                NSLog(@"system action: %@",actions[systemDialogResult]);
+                                NSLog(@"Settings: %@",[APNPermissionRequest enabledTypeNames]);
+}];
+```
+
 
 ## Requirements
 
