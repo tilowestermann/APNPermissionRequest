@@ -17,7 +17,8 @@ static NSString *const kAPNPermissionRequestBundleName = @"APNPermissionRequest"
 static APNPermissionRequest *__sharedInstance;
 
 @interface APNPermissionRequest () <UITableViewDataSource, UITableViewDelegate> {
-    SDCAlertController *alert;
+    UINavigationController *navigationController;
+    UITableView *optionsTableView;
     NSLayoutConstraint *heightConstraint;
     NSBundle *resourceBundle;
 }
@@ -115,9 +116,9 @@ static APNPermissionRequest *__sharedInstance;
         self.requestedType = requestedType;
         
         
-        alert = [SDCAlertController alertControllerWithTitle:requestTitle
-                                                     message:message
-                                              preferredStyle:SDCAlertControllerStyleAlert];
+        SDCAlertController *alert = [SDCAlertController alertControllerWithTitle:requestTitle
+                                                                         message:message
+                                                                  preferredStyle:SDCAlertControllerStyleAlert];
         
         [alert addAction:[SDCAlertAction actionWithTitle:denyButtonTitle
                                                    style:SDCAlertActionStyleDefault
@@ -131,31 +132,31 @@ static APNPermissionRequest *__sharedInstance;
                                                      [self showActualPushNotificationPermissionAlert];
                                                  }]];
         
-        UITableView *tableView = [[UITableView alloc] init];
-        tableView.delegate = self;
-        tableView.dataSource = self;
-        tableView.alwaysBounceVertical = NO;
-        tableView.separatorColor = [UIColor clearColor];
-        tableView.backgroundColor = [UIColor clearColor];
-        tableView.translatesAutoresizingMaskIntoConstraints = NO;
-        [alert.contentView addSubview:tableView];
-        [tableView sdc_horizontallyCenterInSuperview];
-        [tableView sdc_pinWidthToWidthOfView:alert.contentView];
+        optionsTableView = [[UITableView alloc] init];
+        optionsTableView.delegate = self;
+        optionsTableView.dataSource = self;
+        optionsTableView.alwaysBounceVertical = NO;
+        optionsTableView.separatorColor = [UIColor clearColor];
+        optionsTableView.backgroundColor = [UIColor clearColor];
+        optionsTableView.translatesAutoresizingMaskIntoConstraints = NO;
+        [alert.contentView addSubview:optionsTableView];
+        [optionsTableView sdc_horizontallyCenterInSuperview];
+        [optionsTableView sdc_pinWidthToWidthOfView:alert.contentView];
         
         CGFloat heigtConstant = self.collapsed ? 44 : 4*44;
-        heightConstraint = [NSLayoutConstraint constraintWithItem:tableView
+        heightConstraint = [NSLayoutConstraint constraintWithItem:optionsTableView
                                                         attribute:NSLayoutAttributeHeight
                                                         relatedBy:NSLayoutRelationEqual
                                                            toItem:nil
                                                         attribute:NSLayoutAttributeNotAnAttribute
                                                        multiplier:1
                                                          constant:heigtConstant];
-        [tableView addConstraint:heightConstraint];
+        [optionsTableView addConstraint:heightConstraint];
         
-        [alert.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[tableView]-|"
+        [alert.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[optionsTableView]-|"
                                                                                   options:0
                                                                                   metrics:nil
-                                                                                    views:NSDictionaryOfVariableBindings(tableView)]];
+                                                                                    views:NSDictionaryOfVariableBindings(optionsTableView)]];
         
         [alert presentWithCompletion:nil];
         
@@ -192,9 +193,9 @@ static APNPermissionRequest *__sharedInstance;
         self.requestedType = requestedType;
         
         
-        alert = [SDCAlertController alertControllerWithTitle:requestTitle
-                                                     message:message
-                                              preferredStyle:SDCAlertControllerStyleAlert];
+        SDCAlertController *alert = [SDCAlertController alertControllerWithTitle:requestTitle
+                                                                         message:message
+                                                                  preferredStyle:SDCAlertControllerStyleAlert];
         
         [alert addAction:[SDCAlertAction actionWithTitle:denyButtonTitle
                                                    style:SDCAlertActionStyleDefault
@@ -219,6 +220,138 @@ static APNPermissionRequest *__sharedInstance;
     }
 }
 
+- (void)showFullscreenWithType:(APNType)requestedType
+               title:(NSString *)requestTitle
+             message:(NSAttributedString *)message
+        optionsTitle:(NSString *)optionsTitle
+     denyButtonTitle:(NSString *)denyButtonTitle
+    grantButtonTitle:(NSString *)grantButtonTitle
+   completionHandler:(APNPermissionRequestCompletionHandler)completionHandler {
+    
+    if (requestTitle.length == 0) {
+        requestTitle = @"Enable Push Notifications?";
+    }
+    if (denyButtonTitle.length == 0) {
+        denyButtonTitle = @"Not now";
+    }
+    
+    if (grantButtonTitle.length == 0) {
+        grantButtonTitle = @"Accept";
+    }
+    
+    if (optionsTitle.length == 0) {
+        optionsTitle = @"Push Notification Options";
+    }
+    self.optionsTitle = optionsTitle;
+    self.collapsed = NO;
+    
+    APNAuthorizationStatus status = [APNPermissionRequest authorizationStatus];
+    if (status == APNAuthorizationStatusUnDetermined) {
+        self.completionHandler = completionHandler;
+        self.requestedType = requestedType;
+        
+        
+        UIViewController *viewController = [[UIViewController alloc] init];
+        viewController.view.backgroundColor = self.backgroundColor == nil ? [UIColor lightGrayColor] : self.backgroundColor;
+        viewController.edgesForExtendedLayout = UIRectEdgeNone;
+        navigationController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        navigationController.navigationBarHidden = YES;
+        
+        UILabel *titleLabel = [[UILabel alloc] init];
+        titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        titleLabel.numberOfLines = 0;
+        titleLabel.font = [UIFont boldSystemFontOfSize:18];
+        titleLabel.text = requestTitle;
+        [viewController.view addSubview:titleLabel];
+        
+        UILabel *messageLabel = [[UILabel alloc] init];
+        messageLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        messageLabel.numberOfLines = 0;
+        messageLabel.font = [UIFont systemFontOfSize:14];
+        messageLabel.attributedText = message;
+        [viewController.view addSubview:messageLabel];
+        
+        optionsTableView = [[UITableView alloc] init];
+        optionsTableView.delegate = self;
+        optionsTableView.dataSource = self;
+        optionsTableView.alwaysBounceVertical = NO;
+        optionsTableView.separatorColor = [UIColor clearColor];
+        optionsTableView.backgroundColor = [UIColor clearColor];
+        optionsTableView.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        CGFloat heigtConstant = self.collapsed ? 44 : 4*44;
+        heightConstraint = [NSLayoutConstraint constraintWithItem:optionsTableView
+                                                        attribute:NSLayoutAttributeHeight
+                                                        relatedBy:NSLayoutRelationEqual
+                                                           toItem:nil
+                                                        attribute:NSLayoutAttributeNotAnAttribute
+                                                       multiplier:1
+                                                         constant:heigtConstant];
+        [optionsTableView addConstraint:heightConstraint];
+        [viewController.view addSubview:optionsTableView];
+        
+        UIToolbar *toolbar = [[UIToolbar alloc] init];
+        toolbar.translatesAutoresizingMaskIntoConstraints = NO;
+        UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithTitle:denyButtonTitle
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(firePushNotificationPermissionCompletionHandler)];
+        UIBarButtonItem *spaceItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                   target:self
+                                                                                   action:nil];
+        UIBarButtonItem *acceptItem = [[UIBarButtonItem alloc] initWithTitle:grantButtonTitle
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(showActualPushNotificationPermissionAlert)];
+        toolbar.items = @[cancelItem,spaceItem,acceptItem];
+        [viewController.view addSubview:toolbar];
+        
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(titleLabel,
+                                                             messageLabel,
+                                                             optionsTableView,
+                                                             toolbar);
+        
+        [viewController.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(40)-[titleLabel]-[messageLabel]-[optionsTableView]"
+                                                                          options:0
+                                                                          metrics:nil
+                                                                            views:views]];
+        [viewController.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[toolbar]|"
+                                                                                    options:0
+                                                                                    metrics:nil
+                                                                                      views:views]];
+        [viewController.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[titleLabel]-|"
+                                                                          options:0
+                                                                          metrics:nil
+                                                                            views:views]];
+        [viewController.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[messageLabel]-|"
+                                                                                    options:0
+                                                                                    metrics:nil
+                                                                                      views:views]];
+        [viewController.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[optionsTableView]-|"
+                                                                                    options:0
+                                                                                    metrics:nil
+                                                                                      views:views]];
+        [viewController.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[toolbar]|"
+                                                                                    options:0
+                                                                                    metrics:nil
+                                                                                      views:views]];
+        
+        UIWindow *mainWindow = [[UIApplication sharedApplication].windows firstObject];
+        [mainWindow.rootViewController presentViewController:navigationController animated:YES completion:^{
+            
+        }];
+        
+    } else {
+        if (completionHandler) {
+            completionHandler((status == APNAuthorizationStatusUnDetermined),
+                              APNPermissionRequestDialogResultNoActionTaken,
+                              APNPermissionRequestDialogResultNoActionTaken);
+        }
+    }
+}
+
+
 - (void)showDefaultRequestWithType:(APNType)requestedType
                  completionHandler:(APNPermissionRequestCompletionHandler)completionHandler {
     
@@ -240,6 +373,10 @@ static APNPermissionRequest *__sharedInstance;
 
 - (void)showActualPushNotificationPermissionAlert
 {
+    if (navigationController != nil) {
+        [navigationController dismissViewControllerAnimated:YES completion:NULL];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationDidBecomeActive)
                                                  name:UIApplicationDidBecomeActiveNotification
@@ -289,6 +426,10 @@ static APNPermissionRequest *__sharedInstance;
                                                          userDialogResult,
                                                          systemDialogResult);
         self.completionHandler = nil;
+    }
+    
+    if (navigationController != nil) {
+        [navigationController dismissViewControllerAnimated:YES completion:NULL];
     }
 }
 
@@ -391,9 +532,8 @@ static APNPermissionRequest *__sharedInstance;
 - (void)switchPermission:(UISwitch *)sender {
     
     self.requestedType = sender.isOn ? self.requestedType | (APNType)sender.tag : self.requestedType & ~(APNType)sender.tag;
-    UITableView *tableView = [[alert.contentView subviews] firstObject];
     
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0
+    UITableViewCell *cell = [optionsTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0
                                                                                 inSection:0]];
     cell.detailTextLabel.text = [[self requestedTypeNames] componentsJoinedByString:@", "];
 }

@@ -62,10 +62,19 @@ typedef void (^APNPermissionRequestCompletionHandler)(BOOL hasPermission,
     grantButtonTitle:(NSString *)grantButtonTitle
    completionHandler:(APNPermissionRequestCompletionHandler)completionHandler;
 
+- (void)showFullscreenWithType:(APNType)requestedType
+                         title:(NSString *)requestTitle
+                       message:(NSAttributedString *)message
+                  optionsTitle:(NSString *)optionsTitle
+               denyButtonTitle:(NSString *)denyButtonTitle
+              grantButtonTitle:(NSString *)grantButtonTitle
+             completionHandler:(APNPermissionRequestCompletionHandler)completionHandler;
+
 - (void)showDefaultRequestWithType:(APNType)requestedType
                  completionHandler:(APNPermissionRequestCompletionHandler)completionHandler;
 
 @property (retain, nonatomic) NSSet *userNotificationCategories;
 @property (assign, nonatomic) BOOL collapsed;
+@property (strong, nonatomic) UIColor *backgroundColor;
 
 @end
