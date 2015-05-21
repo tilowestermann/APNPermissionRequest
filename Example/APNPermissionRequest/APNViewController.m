@@ -30,7 +30,7 @@
     self.requestMessage = @"Your delivery is ready for pick-up at the post office? We'll inform you immediately via a push notification!";
     self.requestOptionsTitle = @"Notification Settings";
     
-    [self performSelector:@selector(showPushNotificationRequestWithOptions)
+    [self performSelector:@selector(showFullscreenPushNotificationRequest)
                withObject:nil
                afterDelay:2.0];
 }
@@ -122,6 +122,36 @@
             NSLog(@"Settings: %@",[APNPermissionRequest enabledTypeNames]);
         }];
 }
+
+- (void)showFullscreenPushNotificationRequest {
+    
+    NSMutableAttributedString *message = [[NSMutableAttributedString alloc] initWithString:self.requestMessage];
+    [message addAttribute:NSFontAttributeName
+                  value:[UIFont italicSystemFontOfSize:14]
+                  range:[self.requestMessage rangeOfString:@"push notification"]];
+    
+    
+    APNPermissionRequest *request = [APNPermissionRequest sharedRequest];
+    request.backgroundColor = [UIColor colorWithRed:236.0/255.0 green:240.0/255.0 blue:241.0/255.0 alpha:1];
+    [request showFullscreenWithType: APNTypeAlert | APNTypeSound
+                    title:self.requestTitle
+                  message:message
+             optionsTitle:self.requestOptionsTitle
+          denyButtonTitle:@"Don't Allow"
+         grantButtonTitle:@"OK"
+        completionHandler:^(BOOL hasPermission,
+                            APNPermissionRequestDialogResult userDialogResult,
+                            APNPermissionRequestDialogResult systemDialogResult) {
+            NSLog(@"Permission: %d",hasPermission);
+            
+            NSArray *actions = @[@"no action",@"denied", @"granted"];
+            NSLog(@"user: %@",actions[userDialogResult]);
+            NSLog(@"system: %@",actions[systemDialogResult]);
+            
+            NSLog(@"Settings: %@",[APNPermissionRequest enabledTypeNames]);
+        }];
+}
+
 
 
 @end
